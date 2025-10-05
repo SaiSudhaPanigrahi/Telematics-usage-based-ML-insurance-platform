@@ -209,3 +209,17 @@ requirements.txt
 - **Reset** → delete `data/ubi.db` and re-run `dev.py`.
 
 ---
+
+## 📸 Screenshots (Demo)
+
+Below are sample captures from a local run. 
+
+
+![Quote](screenshots/ss1.png)
+![Quote](screenshots/ss2.png)
+![Quote](screenshots/ss3.png)
+![Quote](screenshots/ss4.png)
+![Quote](screenshots/ss5.png)
+![Quote](screenshots/ss6.png)
+
+
