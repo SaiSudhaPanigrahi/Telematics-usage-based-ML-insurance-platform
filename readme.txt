@@ -60,15 +60,7 @@ A. Functional Walkthrough
    - Verify: Charts populate for Throughput (events/min), Feature Latency (ms),
      API Latency (p50/p95, ms), Queue Lag (events).
 
-B. API Verification (FastAPI)
-- Open http://localhost:<API_PORT>/docs
-- Try endpoints with X-API-Key header:
-  • GET /vehicles?user_id=1
-  • GET /pricing/quote?user_id=1&vehicle_id=<id>
-  • GET /driver/summary?user_id=1
-- Confirm the quote breakdown matches the Dashboard Overview components.
-
-C. Optional ML Training (if you want model artifacts)
+C.Optional ML Training (if you want model artifacts)
 - After a few minutes of simulation (>=200 labeled trips), run:
   python src/models/train_model.py --min-trips 200
 - Included metrics (ROC-AUC/Accuracy)(e.g., models/artifacts/calibration.png).
@@ -80,10 +72,10 @@ D. Demo Screenshots
 3) Notes on Models, Data, and External Services
 ------------------------------------------------------------
 Models
-- Default risk scoring is a transparent rule-based approach for stability in demo.
 - ML path provided: RandomForest/XGBoost training entrypoint with calibration/plots.
 - Behavior features: miles, avg_speed, max_speed, harsh_brakes, accel_var,
   speeding_pct, night_pct; Context: weather_risk (stub).
+- Default risk scoring is a transparent rule-based approach for stability in demo.
 
 Data
 - All telematics data are simulated for POC (speed/acceleration/braking + geohash).
