@@ -93,20 +93,6 @@ External Services
 - None required for local demo. Weather/incident integration is stubbed and ready
   to be swapped with a live API (adapter pattern).
 
-Security/Privacy
-- API key auth via X-API-Key (dev value by default).
-- Minimal PII; geohash instead of raw GPS for POC.
-- Production hardening path documented (mTLS, RBAC, encryption at rest, audit).
-
-Performance/Scalability
-- Local POC processor loop ~1–2s; API aims for p95 <100ms on dev machines.
-- Scale blueprint: Kafka/Kinesis → Flink/Spark → Postgres/Feature store → FastAPI.
-- Ops tab visualizes ingestion/latency/queue metrics from processor CSV.
-
-Cost/ROI
-- Fair pricing + behavior nudges can reduce loss frequency and improve retention.
-- Kept infra lean for pilots (serverless ingestion + managed DB).
-
 ------------------------------------------------------------
 5) Contact
 ------------------------------------------------------------
