@@ -220,6 +220,6 @@ Below are sample captures from a local run.
 ![Quote](screenshots/ss3.png)
 ![Quote](screenshots/ss4.png)
 ![Quote](screenshots/ss5.png)
-![Quote](screenshots/ss6.png)
+
 
 
