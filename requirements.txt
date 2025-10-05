@@ -1,0 +1,14 @@
+
+fastapi
+uvicorn
+python-dotenv
+pydantic
+pandas
+numpy
+scikit-learn
+sqlalchemy
+joblib
+geohash2
+streamlit
+matplotlib
+PyJWT
