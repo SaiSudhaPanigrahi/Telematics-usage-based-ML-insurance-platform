@@ -1,36 +1,50 @@
 
-from fastapi import FastAPI, Depends
-import sqlite3
-from src.api.auth import require_api_key
-from src.models.risk_scoring import quote_for_user, risk_score_for_user, vehicle_list_for_user, driver_summary
-from src.utils.config import DB_PATH
+import os, sqlite3
+from pathlib import Path
+from fastapi import FastAPI, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Telematics UBI Pro API")
+API_KEY = os.environ.get("UBI_API_KEY", "dev_api_key_change_me")
+DB_PATH = Path(os.environ.get("UBI_DB_PATH", "data/ubi.db"))
 
-@app.get("/healthz")
-def healthz():
+app = FastAPI(title="Telematics UBI Pro", version="1.0.0")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
+def check_key(x_api_key: str | None):
+    if x_api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+
+def read_sql(sql, params=()):
+    con = sqlite3.connect(str(DB_PATH))
+    cur = con.cursor()
+    cur.execute(sql, params)
+    cols = [d[0] for d in cur.description] if cur.description else []
+    rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+    con.close()
+    return rows
+
+@app.get("/health")
+def health():
     return {"ok": True}
 
-@app.get("/risk/score")
-def risk_score(user_id: int, vehicle_id: str = "", _=Depends(require_api_key)):
-    score, meta = risk_score_for_user(user_id, vehicle_id or None)
-    return {"user_id": user_id, "vehicle_id": vehicle_id or None, "risk_score": score, **meta}
+@app.get("/vehicles")
+def vehicles(user_id: int, x_api_key: str | None = Header(default=None, convert_underscores=False)):
+    check_key(x_api_key)
+    return read_sql("SELECT id, user_id, make, model, year, safety_rating, base_rate FROM vehicles WHERE user_id=? ORDER BY id", (user_id,))
 
 @app.get("/pricing/quote")
-def pricing_quote(user_id: int, vehicle_id: str = "", _=Depends(require_api_key)):
-    q = quote_for_user(user_id, vehicle_id or None)
-    con = sqlite3.connect(DB_PATH)
-    con.execute(
-        "INSERT INTO quotes (ts,user_id,vehicle_id,risk_score,base_premium,dyn_component,final_premium) VALUES (datetime('now'),?,?,?,?,?,?)",
-        (q['user_id'], q.get('vehicle_id'), q['risk_score'], q['base_premium'], q['dynamic_component'], q['final_monthly_premium'])
-    )
-    con.commit(); con.close()
-    return q
-
-@app.get("/vehicles")
-def vehicles(user_id: int, _=Depends(require_api_key)):
-    return vehicle_list_for_user(user_id)
+def quote(user_id: int, vehicle_id: int | None = None, x_api_key: str | None = Header(default=None, convert_underscores=False)):
+    check_key(x_api_key)
+    if vehicle_id:
+        q = "SELECT * FROM quotes WHERE user_id=? AND vehicle_id=? ORDER BY created_at DESC LIMIT 1"
+        rows = read_sql(q, (user_id, vehicle_id))
+    else:
+        q = "SELECT * FROM quotes WHERE user_id=? ORDER BY created_at DESC LIMIT 1"
+        rows = read_sql(q, (user_id,))
+    return rows[0] if rows else {"message": "No quote yet"}
 
 @app.get("/driver/summary")
-def summary(user_id: int, _=Depends(require_api_key)):
-    return driver_summary(user_id)
+def summary(user_id: int, x_api_key: str | None = Header(default=None, convert_underscores=False)):
+    check_key(x_api_key)
+    r = read_sql("SELECT user_id, display_name, points, badges, risk_score FROM driver_summary WHERE user_id=?", (user_id,))
+    return r[0] if r else {}
