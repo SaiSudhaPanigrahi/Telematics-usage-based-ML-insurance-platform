@@ -1,7 +1,7 @@
-# Telematics UBI Pro — Usage‑Based Insurance (Enhanced POC)
+# Telematics UBI Pro — Usage‑Based Insurance
 
 A compact, production‑shaped UBI system that runs in **1 click** and demonstrates end‑to‑end telematics: **multi‑vehicle** simulation, near‑real‑time feature engineering, **risk scoring**, **dynamic pricing** (PAYD + PHYD + context), **gamification**, a transparent **driver dashboard**, and **Recent Trips** on the Overview tab.  
-This README also explains **how it meets every evaluation criterion** and provides **1‑click run** and **GitHub upload** steps.
+This README also explains **how it meets every evaluation criterion** and provides **1‑click run** steps.
 
 ---
 
@@ -22,10 +22,8 @@ What happens automatically:
 - **Auto‑free‑ports**: if 8000/8501 are busy, it picks free ports and prints the URLs
 
 Open in your browser:
-- **API docs** → `http://localhost:<API_PORT>/docs`
-- **Dashboard** → `http://localhost:<DASH_PORT>`
+- **Dashboard** → `http://localhost:<DASH_PORT>` Example: http://localhost:53959
 
-> Default API key: `dev_api_key_change_me` (HTTP header `X-API-Key`)
 
 ### Option B — Quick Dashboard‑Only Preview
 ```bash
@@ -38,8 +36,6 @@ The dashboard reads the same local SQLite DB if present.
 ---
 
 ## 🎯 Objectives → How this project delivers
-
-> **System aims:**
 
 1) **Improve premium accuracy using real‑world driving data**  
    - Trip features: `miles, avg_speed, max_speed, harsh_brakes, accel_var, night_pct, speeding_pct, weather_risk`.  
@@ -113,10 +109,6 @@ The dashboard reads the same local SQLite DB if present.
 ```bash
 python src/models/train_model.py --min-trips 200
 ```
-Artifacts to include in submission when training is enabled:
-- `models/artifacts/calibration.png`
-- `models/artifacts/feature_importances.png`
-
 ---
 
 ## ✅ Evaluation Criteria — How this project meets them
@@ -146,8 +138,6 @@ Artifacts to include in submission when training is enabled:
 - `GET /pricing/quote?user_id=&vehicle_id=` → latest premium breakdown (base/usage/behavior/context/final)  
 - `GET /driver/summary?user_id=` → points, badges, risk score snapshot
 
-> All require header `X-API-Key: dev_api_key_change_me` (or set `UBI_API_KEY`).
-
 ---
 
 ## 🗂️ Repo Layout
@@ -164,49 +154,6 @@ requirements.txt
 ```
 
 ---
-
-## 📸 Screenshots (Demo)
-Add your images to `screenshots/` and reference them here (oldest first):
-```
-screenshots/
-  01_overview_quote.png
-  02_overview_recent_trips.png
-  03_vehicles.png
-  04_achievements.png
-  05_ops_labeled.png
-```
-Example embedding:
-```markdown
-![Overview — Quote](screenshots/01_overview_quote.png)
-![Overview — Recent Trips](screenshots/02_overview_recent_trips.png)
-![Vehicles](screenshots/03_vehicles.png)
-![Achievements](screenshots/04_achievements.png)
-![Ops — Labeled Metrics](screenshots/05_ops_labeled.png)
-```
-
----
-
-## ⬆️ First‑Time GitHub Upload
-
-```bash
-# Inside the project root
-git init
-git add .
-git commit -m "Initial commit: Telematics UBI Pro (Enhanced POC)"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git push -u origin main
-
-# optional release tag for your submission
-git tag -a v1.0 -m "Submission v1.0"
-git push origin v1.0
-```
-
-**Suggested repo name:** `telematics-ubi-pro-enhanced`  
-**Suggested description:** “One‑click UBI POC: multi‑vehicle telematics, real‑time risk scoring, dynamic pricing, gamification, and dashboard.”
-
----
-
 ## 🧭 Troubleshooting
 
 - **Address already in use** → `dev.py` auto‑picks free ports; use the printed URLs.  
@@ -216,10 +163,8 @@ git push origin v1.0
 
 ---
 
-## 📄 License & Notes
-- This is a demonstration project; replace simulated data with your collector/SDK for production pilots.
-- Follow local data‑privacy laws for telemetry collection, storage, and model usage.
 
+## 📸 Screenshots (Demo)
 
 ![Quote](screenshots/ss11.png)
 ![Quote](screenshots/ss12.png)
